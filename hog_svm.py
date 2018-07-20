@@ -115,13 +115,14 @@ def train_and_test():
         print "Training a Linear LinearSVM Classifier."
         clf = LinearSVC()
         clf.fit(fds, labels)
-        # 下面的注释代码是保存模型的
+        # 下面的代码是保存模型的
         if not os.path.exists(model_path):
             os.makedirs(model_path)
         joblib.dump(clf, model_path+'model')
+        #下面的代码是加载模型  可以注释上面的代码   直接进行加载模型  不进行训练
         # clf = joblib.load(model_path+'model')
         print "训练之后的模型存放在model文件夹中"
-        exit()
+        #exit()
         train_name, train_label = get_name_label(train_label_path)
         test_name, test_label = get_name_label(test_label_path)
         result_list = []
