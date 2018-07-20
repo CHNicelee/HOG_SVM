@@ -39,7 +39,9 @@ model_path = 'model/'
 def get_image_list(filePath,nameList):
     img_list = []
     for name in nameList:
-        img_list.append(Image.open(filePath+name))
+        temp = Image.open(filePath+name)
+        img_list.append(temp.copy())
+        temp.close()
     return img_list
 
 #提取特征并保存
