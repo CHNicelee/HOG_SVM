@@ -10,7 +10,7 @@ from sklearn.svm import LinearSVC
 import shutil
 from matplotlib import pyplot
 
-
+#第一个是你的类别   第二个是类别对应的名称   输出结果的时候方便查看
 label_map = {0:'train',
              1:'bus',
              2:'person',
@@ -20,13 +20,11 @@ label_map = {0:'train',
 train_image_path = '/home/icelee/Desktop/python/VOCdevkit/VOC2012/small_image/'
 #测试集图片的位置
 test_image_path = '/home/icelee/Downloads/dataset/small_shixun/'
-# test_image_path = '/home/icelee/Desktop/python/VOCdevkit/VOC2012/small_image/'
 
 #训练集标签的位置
 train_label_path = '/home/icelee/Desktop/python/VOCdevkit/VOC2012/mydata.txt'
 #测试集标签的位置
 test_label_path = '/home/icelee/Downloads/dataset/train.txt'
-# test_label_path = '/home/icelee/Desktop/python/VOC2010/VOCdevkit/VOC2010/test.txt'
 
 size = 128
 
@@ -88,7 +86,7 @@ def extra_feat():
     train_image = get_image_list(train_image_path,train_name)
     test_image = get_image_list(test_image_path,test_name)
     get_feat(train_image,train_name,train_label,train_feat_path,size)
-    # get_feat(test_image,test_name,test_label,test_feat_path,size)
+    get_feat(test_image,test_name,test_label,test_feat_path,size)
 
 
 # 创建存放特征的文件夹
@@ -133,7 +131,7 @@ def train_and_test():
             data_test_feat = data_test[:-1].reshape((1,-1)).astype(np.float64)
             result = clf.predict(data_test_feat)
             result_list.append(image_name+' '+label_map[int(result[0])]+'\n')
-
+            
             if int(result[0]) == int(data_test[-1]):
                 num += 1
         write_to_txt(result_list)
@@ -143,8 +141,9 @@ def train_and_test():
         print '耗时是 : %f'%(t1-t0)
 
 def write_to_txt(list):
-    with open('/home/icelee/Downloads/dataset/result.txt','w') as f:
+    with open('result.txt','w') as f:
         f.writelines(list)
+    print '每张图片的识别结果存放在result.txt里面'
 
 if __name__ == '__main__':
 
@@ -163,9 +162,9 @@ if __name__ == '__main__':
 
     if need_extra_feat == 'y':
         shutil.rmtree(train_feat_path)
-        # shutil.rmtree(test_feat_path)
+        shutil.rmtree(test_feat_path)
         mkdir()
         extra_feat()#获取特征并保存在文件夹
-    # exit()
+
     train_and_test() #训练并预测
 
