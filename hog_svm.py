@@ -16,14 +16,14 @@ label_map = {1: 'cat',
              3: 'snack',
              }
 # 训练集图片的位置
-train_image_path = 'E:\\pythonDir\\HOG_SVM\\image'
+train_image_path = 'image'
 # 测试集图片的位置
-test_image_path = 'E:\\pythonDir\\HOG_SVM\\image'
+test_image_path = 'image'
 
 # 训练集标签的位置
-train_label_path = 'E:\\pythonDir\\HOG_SVM\\image\\train.txt'
+train_label_path = 'image\\train.txt'
 # 测试集标签的位置
-test_label_path = 'E:\\pythonDir\\HOG_SVM\\image\\train.txt'
+test_label_path = 'image\\train.txt'
 
 size = 128
 
