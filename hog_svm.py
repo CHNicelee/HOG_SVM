@@ -78,8 +78,10 @@ def get_name_label(file_path):
     label_list = []
     with open(file_path) as f:
         for line in f.readlines():
-            name_list.append(line.split(' ')[0])
-            label_list.append(line.split(' ')[1])
+            #一般是name label  三部分，所以至少长度为3  所以可以通过这个忽略空白行
+            if len(line)>=3: 
+                name_list.append(line.split(' ')[0])
+                label_list.append(line.split(' ')[1])
     return name_list, label_list
 
 
