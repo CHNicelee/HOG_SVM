@@ -9,6 +9,7 @@ import os
 import joblib
 from sklearn.svm import LinearSVC
 import shutil
+import sys
 
 # 第一个是你的类别   第二个是类别对应的名称   输出结果的时候方便查看
 label_map = {1: 'cat',
@@ -21,9 +22,9 @@ train_image_path = 'image'
 test_image_path = 'image'
 
 # 训练集标签的位置
-train_label_path = 'image\\train.txt'
+train_label_path = os.path.join('image','train.txt')
 # 测试集标签的位置
-test_label_path = 'image\\train.txt'
+test_label_path = os.path.join('image','train.txt')
 
 size = 128
 
@@ -107,48 +108,44 @@ def mkdir():
 # 训练和测试
 def train_and_test():
     t0 = time.time()
-    clf_type = 'LIN_SVM'
-    fds = []
+    features = []
     labels = []
-    num = 0
+    correct_number = 0
     total = 0
-
-    if clf_type is 'LIN_SVM':
-        for feat_path in glob.glob(os.path.join(train_feat_path, '*.feat')):
-            data = joblib.load(feat_path)
-            fds.append(data[:-1])
-            labels.append(data[-1])
-        print("Training a Linear LinearSVM Classifier.")
-        clf = LinearSVC()
-        clf.fit(fds, labels)
-        # 下面的代码是保存模型的
-        if not os.path.exists(model_path):
-            os.makedirs(model_path)
-        joblib.dump(clf, model_path + 'model')
-        # 下面的代码是加载模型  可以注释上面的代码   直接进行加载模型  不进行训练
-        # clf = joblib.load(model_path+'model')
-        print("训练之后的模型存放在model文件夹中")
-        # exit()
-        result_list = []
-        for feat_path in glob.glob(os.path.join(test_feat_path, '*.feat')):
-            total += 1
-            if platform.system() == 'Windows':
-                symbol = '\\'
-            else:
-                symbol = '/'
-            image_name = feat_path.split(symbol)[1].split('.feat')[0]
-            data_test = joblib.load(feat_path)
-            data_test_feat = data_test[:-1].reshape((1, -1)).astype(np.float64)
-            result = clf.predict(data_test_feat)
-            result_list.append(image_name + ' ' + label_map[int(result[0])] + '\n')
-
-            if int(result[0]) == int(data_test[-1]):
-                num += 1
-        write_to_txt(result_list)
-        rate = float(num) / total
-        t1 = time.time()
-        print('准确率是： %f' % rate)
-        print('耗时是 : %f' % (t1 - t0))
+    for feat_path in glob.glob(os.path.join(train_feat_path, '*.feat')):
+        data = joblib.load(feat_path)
+        features.append(data[:-1])
+        labels.append(data[-1])
+    print("Training a Linear LinearSVM Classifier.")
+    clf = LinearSVC()
+    clf.fit(features, labels)
+    # 下面的代码是保存模型的
+    if not os.path.exists(model_path):
+        os.makedirs(model_path)
+    joblib.dump(clf, model_path + 'model')
+    # 下面的代码是加载模型  可以注释上面的代码   直接进行加载模型  不进行训练
+    # clf = joblib.load(model_path+'model')
+    print("训练之后的模型存放在model文件夹中")
+    # exit()
+    result_list = []
+    for feat_path in glob.glob(os.path.join(test_feat_path, '*.feat')):
+        total += 1
+        if platform.system() == 'Windows':
+            symbol = '\\'
+        else:
+            symbol = '/'
+        image_name = feat_path.split(symbol)[1].split('.feat')[0]
+        data_test = joblib.load(feat_path)
+        data_test_feat = data_test[:-1].reshape((1, -1)).astype(np.float64)
+        result = clf.predict(data_test_feat)
+        result_list.append(image_name + ' ' + label_map[int(result[0])] + '\n')
+        if int(result[0]) == int(data_test[-1]):
+            correct_number += 1
+    write_to_txt(result_list)
+    rate = float(correct_number) / total
+    t1 = time.time()
+    print('准确率是： %f' % rate)
+    print('耗时是 : %f' % (t1 - t0))
 
 
 def write_to_txt(list):
@@ -168,8 +165,10 @@ if __name__ == '__main__':
     #     train_label_path = input('请输入训练集合标签的位置,如 /home/icelee/train.txt\n')
     #     test_label_path = input('请输入测试集合标签的位置,如 /home/icelee/test.txt\n')
     #     size = int(input('请输入您图片的大小：如64x64，则输入64\n'))
-
-    need_extra_feat = input('是否需要重新获取特征？y/n\n')
+    if sys.version_info < (3,):
+        need_extra_feat = raw_input('是否需要重新获取特征？y/n\n')
+    else:
+        need_extra_feat = input('是否需要重新获取特征？y/n\n')
 
     if need_extra_feat == 'y':
         shutil.rmtree(train_feat_path)
