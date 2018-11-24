@@ -17,16 +17,17 @@ label_map = {1: 'cat',
              3: 'snack',
              }
 # 训练集图片的位置
-train_image_path = 'image'
+train_image_path = 'image128'
 # 测试集图片的位置
-test_image_path = 'image'
+test_image_path = 'image128'
 
 # 训练集标签的位置
-train_label_path = os.path.join('image','train.txt')
+train_label_path = os.path.join('image128','train.txt')
 # 测试集标签的位置
-test_label_path = os.path.join('image','train.txt')
+test_label_path = os.path.join('image128','train.txt')
 
-size = 128
+image_height = 128
+image_width = 100
 
 train_feat_path = 'train/'
 test_feat_path = 'test/'
@@ -45,12 +46,12 @@ def get_image_list(filePath, nameList):
 
 
 # 提取特征并保存
-def get_feat(image_list, name_list, label_list, savePath, size):
+def get_feat(image_list, name_list, label_list, savePath):
     i = 0
     for image in image_list:
         try:
             # 如果是灰度图片  把3改为-1
-            image = np.reshape(image, (size, size, 3))
+            image = np.reshape(image, (image_height, image_width, 3))
         except:
             print('发送了异常，图片大小size不满足要求：',name_list[i])
             continue
@@ -93,8 +94,8 @@ def extra_feat():
 
     train_image = get_image_list(train_image_path, train_name)
     test_image = get_image_list(test_image_path, test_name)
-    get_feat(train_image, train_name, train_label, train_feat_path, size)
-    get_feat(test_image, test_name, test_label, test_feat_path, size)
+    get_feat(train_image, train_name, train_label, train_feat_path)
+    get_feat(test_image, test_name, test_label, test_feat_path)
 
 
 # 创建存放特征的文件夹
