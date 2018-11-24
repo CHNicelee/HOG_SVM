@@ -83,7 +83,10 @@ def get_name_label(file_path):
             #一般是name label  三部分，所以至少长度为3  所以可以通过这个忽略空白行
             if len(line)>=3: 
                 name_list.append(line.split(' ')[0])
-                label_list.append(line.split(' ')[1])
+                label_list.append(line.split(' ')[1].replace('\n','').replace('\r',''))
+                if not str(label_list[-1]).isdigit():
+                    print("label必须为数字，得到的是：",label_list[-1],"程序终止，请检查文件")
+                    exit(1)
     return name_list, label_list
 
 
