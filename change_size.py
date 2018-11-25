@@ -1,12 +1,12 @@
 #coding=utf-8
 from PIL import Image
 import os
-image_height = 128
 image_width = 100
+image_height = 128
 def fixed_size(filePath,savePath):
     """按照固定尺寸处理图片"""
     im = Image.open(filePath)
-    out = im.resize((image_height, image_width), Image.ANTIALIAS)
+    out = im.resize((image_width, image_height), Image.ANTIALIAS)
     out.save(savePath)
 
 
